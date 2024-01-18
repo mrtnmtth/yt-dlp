@@ -70,10 +70,10 @@ class PokemonIE(InfoExtractor):
 
 
 class PokemonWatchIE(InfoExtractor):
-    _VALID_URL = r'https?://watch\.pokemon\.com/[a-z]{2}-[a-z]{2}/(?:#/)?player(?:\.html)?\?id=(?P<id>[a-z0-9]{32})'
-    _API_URL = 'https://www.pokemon.com/api/pokemontv/v2/channels/{0:}'
+    _VALID_URL = r'https?://www\.watch-pokemon-tv\.net/[a-z]{2}/(?:#/)?player(?:\.html)?\?id=(?P<id>[a-z0-9]{20})'
+    _API_URL = 'https://www.watch-pokemon-tv.net/channels/channels/v2/{0:}.json'
     _TESTS = [{
-        'url': 'https://watch.pokemon.com/en-us/player.html?id=8309a40969894a8e8d5bc1311e9c5667',
+        'url': 'https://www.watch-pokemon-tv.net/us/#/player?id=9ejh4b6gkcl5v55z3ud9',
         'md5': '62833938a31e61ab49ada92f524c42ff',
         'info_dict': {
             'id': '8309a40969894a8e8d5bc1311e9c5667',
@@ -85,7 +85,7 @@ class PokemonWatchIE(InfoExtractor):
         'url': 'https://watch.pokemon.com/en-us/#/player?id=3fe7752ba09141f0b0f7756d1981c6b2',
         'only_matching': True
     }, {
-        'url': 'https://watch.pokemon.com/de-de/player.html?id=b3c402e111a4459eb47e12160ab0ba07',
+        'url': 'https://www.watch-pokemon-tv.net/de/player.html?id=b3c402e111a4459eb47e12160ab0ba07',
         'only_matching': True
     }]
 
@@ -102,8 +102,6 @@ class PokemonWatchIE(InfoExtractor):
         info = {
             '_type': 'url',
             'id': video_id,
-            'url': 'limelight:media:%s' % video_id,
-            'ie_key': 'LimelightMedia',
         }
 
         # API call can be avoided entirely if we are listing formats
@@ -126,6 +124,7 @@ class PokemonWatchIE(InfoExtractor):
         images = video_data.get('images')
 
         return merge_dicts(info, {
+            'url': video_data.get('stream_url'),
             'title': video_data.get('title'),
             'description': video_data.get('description'),
             'thumbnail': images.get('medium') or images.get('small'),
